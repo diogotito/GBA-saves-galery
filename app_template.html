@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Material symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <script>
+      // google.script.run.withSuccessHandler(data => ...).fn(...)
+    </script>
+    
+    <style>
+      /* Fonts and icons */
+      @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+      /* Variables */
+
+      :root {
+        --thumb-width: 240px;
+        --thumb-height: 160px;
+
+        --thiccness: 4px;
+
+        /* dark */
+        --foreground-color: #fff;
+        --background-color: #000;
+
+        /* light */
+        --foreground-color: #000;
+        --background-color: #fff;
+        --slot-bg: #ccc;
+      }
+
+      /* Style */
+
+      body {
+        font-family: 'VT323', monospace;
+        color: var(--foreground-color);
+        background-color: var(--background-color);
+
+        margin: var(--thiccness) 0;
+
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+      }
+
+      h1,h2 {
+        font-family: 'Press Start 2P', cursive;
+        margin: 1em 0;
+      }
+
+      header {
+        margin: 0 1em 0 2em;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+      }
+
+      header h1 {
+        margin: 0;
+      }
+
+      /* Games */
+
+      main {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: calc(6 * var(--thiccness));
+        
+        /* Descola o último jogo da direita */
+        padding-right: calc(3 * var(--thiccness));
+      }
+
+      article {
+        background-color: #fff;
+      }
+
+      .save-states {
+        display: grid;
+
+        grid-template: " c  c s0" 1fr
+                       "s1 s2 s3" 1fr
+                       "s4 s5 s6" 1fr
+                       "s7 s8 s9" 1fr / min-content min-content min-content;
+        
+        grid-gap: calc(3 * var(--thiccness));
+
+        /* fancy pokemon style double border */
+        border: calc(3 * var(--thiccness)) double #000;
+
+        box-shadow: 0 var(--thiccness) 0 #000
+                  , inset 0 var(--thiccness) 0 #000;
+
+        padding:     calc(3 * var(--thiccness));
+        padding-top: calc(4 * var(--thiccness));
+      }
+
+      .cartridge-save {
+        grid-area: c;
+        display: grid;
+        grid-template: "icon name name name" min-content
+                       "desc desc desc desc" 1fr
+                       "last last  dt  revs" min-content / min-content auto auto 1fr;
+        gap: calc(3 * var(--thiccness));
+        align-items: center;
+
+        line-height: 9px;
+      }
+
+      .cartridge-save .cartridge-icon {
+        grid-area: icon;
+        align-self: start;
+        width: calc(16 * var(--thiccness));
+        height: calc(16 * var(--thiccness));
+      }
+
+      .cartridge-save h2 {
+        grid-area: name;
+        margin: 0;
+        line-height: calc(22px + var(--thiccness));
+      }
+
+      .cartridge-desc {
+        grid-area: desc;
+        line-height: calc(9px + var(--thiccness));  /* Porque é que 100% não dá 9px, que é o que está no parent? */
+      }
+
+      .cartridge-save h3 {
+        grid-area: last;
+        margin: 0;
+      }
+
+      .cartridge-save .slot-saved {
+        grid-area: dt;
+      }
+
+      .cartridge-save .slot-num-revisions {
+        grid-area: revs;
+      }
+
+      .slot {
+        display: grid;
+        grid-template: ".. .. .. .." var(--thiccness)
+                       ".. sn ns .." min-content
+                       ".. .. .. .." var(--thiccness)
+                       "tt tt tt tt" var(--thumb-height)
+                       ".. .. .. .." var(--thiccness)
+                       ".. ls ls .." min-content
+                       ".. .. .. .." var(--thiccness) / var(--thiccness) auto auto var(--thiccness);
+        
+        /* fancy retro style border */
+        box-shadow: calc(-1 * var(--thiccness)) 0 0 #000
+                  , calc( 1 * var(--thiccness)) 0 0 #000
+                  , 0 calc(-1 * var(--thiccness)) 0 #000
+                  , 0 calc( 1 * var(--thiccness)) 0 #000;
+        
+        margin: var(--thiccness);
+
+        line-height: 9px;
+      }
+      .slot-0 { grid-area: s0; }
+      .slot-1 { grid-area: s1; }
+      .slot-2 { grid-area: s2; }
+      .slot-3 { grid-area: s3; }
+      .slot-4 { grid-area: s4; }
+      .slot-5 { grid-area: s5; }
+      .slot-6 { grid-area: s6; }
+      .slot-7 { grid-area: s7; }
+      .slot-8 { grid-area: s8; }
+      .slot-9 { grid-area: s9; }
+
+      .slot-number {
+        font-weight: bold;
+        grid-area: sn;
+      }
+
+      .slot-num-revisions {
+        grid-area: ns;
+        text-align: right;
+      }
+
+      .slot-thumb {
+        grid-area: tt;  
+      }
+
+      .slot-thumb img {
+        /* image-rendering: pixelated; */
+      }
+
+      .slot-saved {
+        grid-area: ls;
+      }
+
+      .slot-unused {
+        opacity: 20%;
+      }
+      .slot-unused-text {
+        font-style: italic;
+        grid-area: ls;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <header>
+      <h1>So I've been emulating...</h1>
+    </header>
+
+    <main>
+      <? const games = getGames()
+         let gameObjs = Object.values(games)
+         gameObjs.sort((g1, g2) => g2.cartridgeSave - g1.cartridgeSave)
+         for (let {name, description, cartridgeSave, saveStates, numRevisions} of gameObjs) { ?>
+        <article>
+          <div class="save-states">
+            <div class="cartridge-save">
+              <div class="cartridge-icon"><?!= ICON_CARTRIDGE ?></div>
+              <h2><?= name ?></h2>
+              <!-- <div class="material-symbols-outlined" style="float: left; margin-right: 0.25em;">save</div> -->
+              <div class="cartridge-desc">
+                <?= description ?>
+              </div>
+              <h3>Last cartridge save:</h3>
+              <div class="slot-saved">
+                <?= fmtDateTime(cartridgeSave) ?>
+              </div>
+              <div class="slot-num-revisions">
+                Saved <?= numRevisions ?> times
+              </div>
+            </div>
+            <? for (let {slot, lastSaved, image, numRevisions} of saveStates) { ?>
+              <div class="slot slot-<?= slot ?> <?= !lastSaved ? "slot-unused" : "" ?>">
+                <div class="slot-number">Slot <?= slot || "0 (quick)" ?></div>
+                <? if (lastSaved != null) { ?>
+                  <div class="slot-num-revisions">
+                    (<?= numRevisions ?> snapshots)
+                  </div>
+                  <div class="slot-thumb">
+                    <img src="<?= image ?>" />
+                  </div>
+                  <div class="slot-saved">
+                    <strong>Last saved:</strong>
+                    <?= fmtDateTime(lastSaved) ?>
+                  </div>
+                <? } else { ?>
+                  <div class="slot-thumb">
+                    <img width="240" height="160" />
+                  </div>
+                  <div class="slot-unused-text">Unused</div>
+                <? } ?>
+              </div>
+            <? } ?>
+          </div>
+        </article>
+      <? } ?>
+    </main>
+  </body>
+</html>
