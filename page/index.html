@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <?!= include("page/script") ?>
+    <?!= include("page/style") ?>
+  
+  </head>
+  <body>
+    <header>
+      <h1>So I've been emulating...</h1>
+    </header>
+
+    <main>
+      <? const games = getGames()
+         let gameObjs = Object.values(games)
+         gameObjs.sort((g1, g2) => g2.cartridgeSave - g1.cartridgeSave)
+         for (let {name, description, cartridgeSave, saveStates, numRevisions} of gameObjs) { ?>
+        <article>
+          <div class="save-states">
+            <div class="cartridge-save">
+              <div class="cartridge-icon"><?!= ICON_CARTRIDGE ?></div>
+              <h2><?= name ?></h2>
+              <!-- <div class="material-symbols-outlined" style="float: left; margin-right: 0.25em;">save</div> -->
+              <div class="cartridge-desc">
+                <?= description ?>
+              </div>
+              <h3>Last cartridge save:</h3>
+              <div class="slot-saved">
+                <?= fmtDateTime(cartridgeSave) ?>
+              </div>
+              <div class="slot-num-revisions">
+                Saved <?= numRevisions ?> times
+              </div>
+            </div>
+            <? for (let {slot, lastSaved, image, numRevisions} of saveStates) { ?>
+              <div class="slot slot-<?= slot ?> <?= !lastSaved ? "slot-unused" : "" ?>">
+                <div class="slot-number">Slot <?= slot || "0 (quick)" ?></div>
+                <? if (lastSaved != null) { ?>
+                  <div class="slot-num-revisions">
+                    (<?= numRevisions ?> snapshots)
+                  </div>
+                  <div class="slot-thumb">
+                    <img src="<?= image ?>" />
+                  </div>
+                  <div class="slot-saved">
+                    <strong>Last saved:</strong>
+                    <?= fmtDateTime(lastSaved) ?>
+                  </div>
+                <? } else { ?>
+                  <div class="slot-thumb">
+                    <img width="240" height="160" />
+                  </div>
+                  <div class="slot-unused-text">Unused</div>
+                <? } ?>
+              </div>
+            <? } ?>
+          </div>
+        </article>
+      <? } ?>
+    </main>
+  </body>
+</html>
