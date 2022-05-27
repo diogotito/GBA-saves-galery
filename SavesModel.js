@@ -6,7 +6,11 @@ function* listSaves() {
   let filesIterator = myFolder.getFiles()
 
   while (filesIterator.hasNext()) {
-    yield filesIterator.next()
+    const f = filesIterator.next()
+    const label = `yielding ${f.getName()}`
+    console.time(label)
+    yield f
+    console.timeEnd(label)
   }
 }
 

@@ -1,7 +1,9 @@
+// TODO "route" e to return JSON response to eventually query my GBA games through a static app hosted in GitHub Pages
+// return ContentService.createTextOutput(JSON.stringify(getGames())).setMimeType(ContentService.MimeType.JSON)
+
 // Entry point for web app
 const doGet = _e =>
   HtmlService.createTemplateFromFile('page/index').evaluate()
-
 
 // Utilities used in app_template.html
 
