@@ -15,15 +15,15 @@
     </header>
 
     <main>
-      <? const games = getGames()
+      <? const games = getAllGames()
          let gameObjs = Object.values(games)
          gameObjs.sort((g1, g2) => g2.cartridgeSave - g1.cartridgeSave)
-         for (let {name, description, cartridgeSave, saveStates, numRevisions} of gameObjs) { ?>
+         for (let {romName, gameName, description, cartridgeSave, saveStates, numRevisions} of gameObjs) { ?>
         <article>
           <div class="save-states">
             <div class="cartridge-save">
               <div class="cartridge-icon"><?!= ICON_CARTRIDGE ?></div>
-              <h2><?= name ?></h2>
+              <h2><?= gameName ?></h2>
               <!-- <div class="material-symbols-outlined" style="float: left; margin-right: 0.25em;">save</div> -->
               <div class="cartridge-desc">
                 <?= description ?>

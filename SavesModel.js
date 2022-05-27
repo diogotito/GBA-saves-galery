@@ -11,17 +11,22 @@ function* listSaves() {
 }
 
 
-function getGames() {
+const cleanupROMName = name =>
+  /^(?:\d{4} - )?(?<name>.*?)(?: \(\w\) ?\(\w+\))?$/
+    .exec(name)?.groups["name"] ?? name
+
+
+function getAllGames() {
   let games = {}
 
   for (let file of listSaves()) {
     let match = /^(.*)(\.sav|\.st([0-9])(?:\.png)?)$/.exec(file.getName())
     if (match) {
       let [_fileName, game, ext, slot] = match
-      //Logger.log("game = %s\next = %s\next endsWith .png = %s\nslot = %s\ngame in games = %s", game, ext, ext.endsWith('.png'), slot, game in games)
       if (!(game in games)) {
         games[game] = {
-          name: game,
+          romName: game,
+          gameName: cleanupROMName(game),
           saveStates: [...Array(10)].map((_, i) => ({
             slot: i,
             lastSaved: null,
@@ -46,6 +51,5 @@ function getGames() {
     }
   }
 
-  // console.log(games)
   return games
 }
