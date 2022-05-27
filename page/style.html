@@ -10,6 +10,9 @@
 
     --thiccness: 4px;
 
+    --small-line-height: 9px;
+    --big-line-height:   22px;
+
     /* dark */
     --foreground-color: #fff;
     --background-color: #000;
@@ -88,12 +91,15 @@
     grid-area: c;
     display: grid;
     grid-template: "icon name name name" min-content
-                    "desc desc desc desc" 1fr
-                    "last last  dt  revs" min-content / min-content auto auto 1fr;
+                   "desc desc desc desc" 1fr
+                   "last last  dt  revs" min-content /*
+                   "file file name name" min-content */ / min-content auto auto 1fr;
     gap: calc(3 * var(--thiccness));
     align-items: center;
 
-    line-height: 9px;
+    padding: calc(2 * var(--thiccness));
+
+    line-height: var(--small-line-height);
   }
 
   .cartridge-save .cartridge-icon {
@@ -106,12 +112,12 @@
   .cartridge-save h2 {
     grid-area: name;
     margin: 0;
-    line-height: calc(22px + var(--thiccness));
+    line-height: calc(var(--big-line-height) + var(--thiccness));
   }
 
   .cartridge-desc {
     grid-area: desc;
-    line-height: calc(9px + var(--thiccness));  /* Porque é que 100% não dá 9px, que é o que está no parent? */
+    line-height: calc(var(--small-line-height) + 2 * var(--thiccness));
   }
 
   .cartridge-save h3 {
@@ -137,6 +143,8 @@
                     ".. ls ls .." min-content
                     ".. .. .. .." var(--thiccness) / var(--thiccness) auto auto var(--thiccness);
     
+    width: var(--thumb-width);
+    
     /* fancy retro style border */
     box-shadow: calc(-1 * var(--thiccness)) 0 0 #000
               , calc( 1 * var(--thiccness)) 0 0 #000
@@ -145,7 +153,7 @@
     
     margin: var(--thiccness);
 
-    line-height: 9px;
+    line-height: var(--small-line-height);
   }
   .slot-0 { grid-area: s0; }
   .slot-1 { grid-area: s1; }
@@ -181,11 +189,17 @@
   }
 
   .slot-unused {
-    opacity: 20%;
+    /* opacity: 20%; */
   }
   .slot-unused-text {
-    font-style: italic;
-    grid-area: ls;
+    grid-area: tt;
+    
+    text-align: center;
+    vertical-align: middle;
+    align-self: center;
+    justify-self: center;
+
+    font: 24px 'Press Start 2P';
   }
 
 </style>
