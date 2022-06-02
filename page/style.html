@@ -23,6 +23,12 @@
     --slot-bg: #ccc;
   }
 
+  /* general */
+
+  svg {
+    shape-rendering: crispEdges;
+  }
+
   /* Style */
 
   body {
@@ -42,14 +48,16 @@
     margin: 1em 0;
   }
 
-  header {
+  body > header {
     margin: 0 1em 0 2em;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
   }
 
-  header h1 {
+  body > header h1 {
     margin: 0;
+    font-size: x-large;
+    text-align: center;
   }
 
   /* Games */
@@ -63,7 +71,7 @@
     padding-right: calc(3 * var(--thiccness));
   }
 
-  article {
+  article.uh {
     background-color: #fff;
   }
 
@@ -118,6 +126,43 @@
   .cartridge-desc {
     grid-area: desc;
     line-height: calc(var(--small-line-height) + 2 * var(--thiccness));
+    max-height: 90px;
+    overflow: auto;
+  }
+
+  ul.ratings {
+    margin-bottom: 0;
+    list-style-type: none;
+  }
+
+  ul.ratings {
+    margin-top: calc(2 * var(--thiccness));
+  }
+  ul.ratings+p {
+    text-align: justify;
+    text-justify: inter-word;
+    margin-top: calc(2.2 * var(--thiccness));
+    line-height: calc(2.3 * var(--thiccness) + var(--small-line-height));
+  }
+
+  ul.ratings > li {
+    float: right;
+    text-align: right;
+    font-weight: bold;
+    margin-bottom: var(--thiccness);
+    margin-left: calc(3 * var(--thiccness));
+    padding-left: calc(1 * var(--thiccness));
+    box-shadow: calc(-1.5 * var(--thiccness)) calc(-0.5 * var(--thiccness)) 0 calc(-0.5 * var(--thiccness)) var(--foreground-color),
+                inset calc(-45 * var(--thiccness)) 1px 0 var(--background-color),
+                inset 0 calc(-1 * var(--thiccness)) 0 0 var(--foreground-color);
+  }
+  ul.ratings > li:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .star-rating {
+    width: calc(5 * 9 * var(--thiccness));
+    vertical-align: middle;
   }
 
   .cartridge-save h3 {

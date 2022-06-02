@@ -14,20 +14,54 @@
       <h1>So I've been emulating...</h1>
     </header>
 
+    <!-- Load SVG sprites -->
+    <?!= include("page/SVG-symbols") ?>
+
     <main>
       <? const games = getAllGames()
          let gameObjs = Object.values(games)
          gameObjs.sort((g1, g2) => g2.cartridgeSave - g1.cartridgeSave)
-         for (let {romName, gameName, description, cartridgeSave, saveStates, numRevisions} of gameObjs) { ?>
-        <article>
+         for (let {romName, gameName, description: {review, ratings}, cartridgeSave, saveStates, numRevisions} of gameObjs) { ?>
+        <article class="uh">
           <div class="save-states">
-            <div class="cartridge-save">
-              <div class="cartridge-icon"><?!= ICON_CARTRIDGE ?></div>
-              <h2><?= gameName ?></h2>
-              <!-- <div class="material-symbols-outlined" style="float: left; margin-right: 0.25em;">save</div> -->
-              <div class="cartridge-desc">
-                <?= description ?>
+
+            <header class="cartridge-save">
+
+              <div class="cartridge-icon">
+                <svg viewBox="0 0 16 16"><use xlink:href="#gameboy-cartridge"></use></svg>
               </div>
+              
+              <h2><?= gameName ?></h2>
+              
+              <div class="cartridge-desc">
+                <strong>ROM file:</strong> <?= romName ?>
+
+                <!-- Ratings -->
+                <ul class="ratings">
+                  <? for (let [ratingName, rating] of Object.entries(ratings)) { ?>
+                    <li>
+                      <?= ratingName ?>:
+
+                      <!-- Rasterizar o rating -->
+                      <svg class="star-rating" viewBox="0 0 44 8">
+                        <? for (let star = 0; star < 5; star++) { ?>
+                          <use
+                            xlink:href="#<?= (rating - star >= 1) ? "full-star" :
+                                                 ((rating - star > 0) ? "half-star" :"empty-star") ?>"
+                            x="<?= 9 * star ?>" />
+                        <? } ?>
+                      </svg>
+                      <!-- <?!= rating.toString().padStart(3, '_').replaceAll('_', '&nbsp') ?> / 5 -->
+
+                    </li>
+                  <? } ?>
+                </ul>
+
+                <p><?= review ?></p>
+
+              </div>
+              <!-- End of .cartridge-desc -->
+
               <h3>Last cartridge save:</h3>
               <div class="slot-saved">
                 <?= fmtDateTime(cartridgeSave) ?>
@@ -35,13 +69,15 @@
               <div class="slot-num-revisions">
                 Saved <?= numRevisions ?> times
               </div>
-            </div>
+
+            </header>
+            
             <? for (let {slot, lastSaved, image, numRevisions} of saveStates) { ?>
-              <div class="slot slot-<?= slot ?> <?= !lastSaved ? "slot-unused" : "" ?>">
+              <article class="slot slot-<?= slot ?> <?= !lastSaved ? "slot-unused" : "" ?>">
                 <div class="slot-number">Slot <?= slot || "0 (quick)" ?></div>
                 <? if (lastSaved != null) { ?>
                   <div class="slot-num-revisions">
-                    (<?= numRevisions ?> snapshots)
+                    <?!= numRevisions > 1 ? `Snapshot <strong>${numRevisions}</strong> of ${numRevisions}` : "" ?>
                   </div>
                   <div class="slot-thumb">
                     <img src="<?= image ?>" />
@@ -53,7 +89,7 @@
                 <? } else { ?>
                   <h3 class="slot-unused-text">Unused</h3>
                 <? } ?>
-              </div>
+              </article>
             <? } ?>
           </div>
         </article>
