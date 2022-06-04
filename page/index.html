@@ -2,14 +2,20 @@
 <html>
   <head>
     <base target="_top">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <?!= include("page/script") ?>
     <?!= include("page/style") ?>
-  
   </head>
+
   <body>
+
+    <aside class="debug">
+      <code id="debug" style="display: block; min-width: 20em; width: 50vw; max-height: calc(100vh - 42px); overflow: auto; border: 1px dotted black; padding: 10px; margin: 10px;">
+        Debug output:
+          *
+
+      </code>
+    </aside>
+
     <header>
       <h1>So I've been emulating...</h1>
     </header>
@@ -21,8 +27,18 @@
       <? const games = getAllGames()
          let gameObjs = Object.values(games)
          gameObjs.sort((g1, g2) => g2.cartridgeSave - g1.cartridgeSave)
-         for (let {romName, gameName, description: {review, ratings}, cartridgeSave, saveStates, numRevisions} of gameObjs) { ?>
-        <article class="uh">
+
+         for (let { fileId
+                  , romName
+                  , gameName
+                  , description: {review, ratings}
+                  , cartridgeSave
+                  , saveStates
+                  , numRevisions}
+              of gameObjs
+         ) {
+      ?>
+        <article class="uh" data-file-id="<?= fileId ?>">
           <div class="save-states">
 
             <header class="cartridge-save">
@@ -46,9 +62,16 @@
                       <svg class="star-rating" viewBox="0 0 44 8">
                         <? for (let star = 0; star < 5; star++) { ?>
                           <use
-                            xlink:href="#<?= (rating - star >= 1) ? "full-star" :
-                                                 ((rating - star > 0) ? "half-star" :"empty-star") ?>"
-                            x="<?= 9 * star ?>" />
+                            x="<?= 9 * star ?>"
+                            xlink:href="<?
+                                if (rating - star >= 1) {
+                                  ?>#full-star<?
+                                } else if (rating - star > 0) {
+                                  ?>#half-star<?
+                                } else {
+                                  ?>#empty-star<?
+                                } ?>"
+                            />
                         <? } ?>
                       </svg>
                       <!-- <?!= rating.toString().padStart(3, '_').replaceAll('_', '&nbsp') ?> / 5 -->
@@ -72,8 +95,9 @@
 
             </header>
             
-            <? for (let {slot, lastSaved, image, numRevisions} of saveStates) { ?>
-              <article class="slot slot-<?= slot ?> <?= !lastSaved ? "slot-unused" : "" ?>">
+            <!-- Slots from 0 to 9 -->
+            <? for (let {slot, fileId, lastSaved, image, numRevisions} of saveStates) { ?>
+              <article class="slot slot-<?= slot ?> <?= !lastSaved ? "slot-unused" : "" ?>" data-file-id="<?= fileId ?>">
                 <div class="slot-number">Slot <?= slot || "0 (quick)" ?></div>
                 <? if (lastSaved != null) { ?>
                   <div class="slot-num-revisions">
@@ -91,9 +115,15 @@
                 <? } ?>
               </article>
             <? } ?>
+            <!-- End of slots -->
+
           </div>
         </article>
       <? } ?>
+      <!-- End of games -->
+
     </main>
+
+    <?!= include("page/script") ?>
   </body>
 </html>

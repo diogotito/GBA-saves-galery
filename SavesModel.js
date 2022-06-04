@@ -15,11 +15,33 @@ function* listSaves() {
 }
 
 
+/** Fetches revision lists in bulk */
+function getRevisionsInBulk(fileIds) {
+  const cache = CacheService.getScriptCache()
+  const TIME = (label, f) => {
+    console.time(label)
+    let ret = f()
+    console.timeEnd(label)
+    return ret
+  }
+
+  return fileIds.map(id => {
+    let file = TIME(`DriveApp.getFileById(${id})`,
+               () => DriveApp.getFileById(id))
+    return TIME(`getRevisions() ${id}`,
+           () => getRevisions(file, cache))
+  })
+}
+
+
 /** Uses the script cache and the advanced Drive API */
-function getRevisions(file) {
+function getRevisions(file, cache) {
   const ONE_DAY = 24 * 60 * 60;
-  const cache = CacheService.getScriptCache();
-  
+
+  if (!cache) {
+    cache = CacheService.getScriptCache();
+  }
+
   // Try to retrieve from cache and return the cached value if successful
   const key = file.getName() + "/" + file.getLastUpdated().toISOString()
   let value = cache.get(key)
@@ -72,8 +94,11 @@ function getAllGames() {
         games[game] = {
           romName: game,
           gameName: cleanupROMName(game),
+          fileId: null,
           saveStates: [...Array(10)].map((_, i) => ({
             slot: i,
+            fileId: null,
+            imageId: null,
             lastSaved: null,
             image: null,
             numRevisions: 0,
@@ -84,13 +109,14 @@ function getAllGames() {
         }
       }
       if (ext == ".sav") {
+        games[game].fileId = file.getId()
         games[game].description = parseDescription(file.getDescription())
         games[game].cartridgeSave = file.getLastUpdated()
-        games[game].numRevisions = getRevisions(file).length
       } else if (ext.endsWith(".png")) {
+        games[game].saveStates[slot].imageId = file.getId()
         games[game].saveStates[slot].image = file.getDownloadUrl()
-        games[game].saveStates[slot].numRevisions = getRevisions(file).length
       } else if (ext.startsWith(".st")) {
+        games[game].saveStates[slot].fileId = file.getId()
         games[game].saveStates[slot].lastSaved = file.getLastUpdated()
       }
     }

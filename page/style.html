@@ -23,11 +23,29 @@
     --slot-bg: #ccc;
   }
 
+  
   /* general */
 
   svg {
     shape-rendering: crispEdges;
   }
+
+  
+  /* JS */
+
+  .throbber::after {
+    content: "---";
+    animation: throbber 0.5s both infinite alternate;
+  }
+
+  @keyframes throbber {
+    0% { content: ".\a0\a0"; }
+    25% { content: "..\a0"; }
+    50% { content: "..."; }
+    75% { content: "\a0.."; }
+    100% { content: "\a0\a0."; }
+  }
+
 
   /* Style */
 
@@ -40,7 +58,7 @@
 
     display: flex;
     flex-flow: row nowrap;
-    align-items: center;
+    /* align-items: center; */
   }
 
   h1,h2 {
@@ -142,21 +160,21 @@
     text-align: justify;
     text-justify: inter-word;
     margin-top: calc(2.2 * var(--thiccness));
-    line-height: calc(2.3 * var(--thiccness) + var(--small-line-height));
+    line-height: calc(2.4 * var(--thiccness) + var(--small-line-height));
   }
 
   ul.ratings > li {
     float: right;
     text-align: right;
     font-weight: bold;
-    margin-bottom: var(--thiccness);
+    margin-top: var(--thiccness);
     margin-left: calc(3 * var(--thiccness));
     padding-left: calc(1 * var(--thiccness));
     box-shadow: calc(-1.5 * var(--thiccness)) calc(-0.5 * var(--thiccness)) 0 calc(-0.5 * var(--thiccness)) var(--foreground-color),
                 inset calc(-45 * var(--thiccness)) 1px 0 var(--background-color),
                 inset 0 calc(-1 * var(--thiccness)) 0 0 var(--foreground-color);
   }
-  ul.ratings > li:last-of-type {
+  ul.ratings > li:first-of-type {
     margin-bottom: 0;
   }
 
