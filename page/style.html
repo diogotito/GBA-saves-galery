@@ -246,8 +246,16 @@
   }
 
   .slot-thumb img {
-    /* image-rendering: pixelated; */
+    image-rendering: pixelated;
     width: var(--thumb-width);
+    transition: transform 0.125s steps(3, end), box-shadow 0.25s steps(5, end) 0.1s;
+    box-shadow: 0 0 5px 0 rgb(0 0 0 / 0%), 0 0 0 0 rgb(0 0 0 / 0%);
+    cursor: zoom-in;
+  }
+
+  .slot-thumb:active img {
+    box-shadow: 0 0 5px 0 rgb(0 0 0), 0 0 0 15vmax rgb(0 0 0 / 70%);
+    transform: scale(4);
   }
 
   .slot-saved {
