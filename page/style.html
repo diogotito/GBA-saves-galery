@@ -139,12 +139,14 @@
     grid-area: name;
     margin: 0;
     line-height: calc(var(--big-line-height) + var(--thiccness));
+    max-height: calc(16 * var(--thiccness));
+    overflow: auto;
   }
 
   .cartridge-desc {
     grid-area: desc;
     line-height: calc(var(--small-line-height) + 2 * var(--thiccness));
-    max-height: 90px;
+    max-height: 60px;
     overflow: auto;
   }
 
@@ -245,6 +247,7 @@
 
   .slot-thumb img {
     /* image-rendering: pixelated; */
+    width: var(--thumb-width);
   }
 
   .slot-saved {
@@ -266,3 +269,13 @@
   }
 
 </style>
+
+
+
+<!-- Device pixel ratio hack -->
+<script>
+  document.documentElement.style.setProperty('--thumb-width', `${240 / devicePixelRatio}px`)
+  document.documentElement.style.setProperty('--thumb-height', `${160 / devicePixelRatio}px`)
+</script>
+
+
