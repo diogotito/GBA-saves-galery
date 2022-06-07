@@ -1,48 +1,23 @@
 <script defer>
-  const debugEl = document.querySelector("#debug")
-  const LOG = (...args) => {
-    debugEl.append(
-        "  * ",
-        ...args.flatMap(arg => JSON.stringify(arg, null, "›   ")
-                                  .split('\n')
-                                  .flatMap(line => [ line
-                                                    , document.createElement('br')
-                                                    , "    "
-                                                    ]))
-    )
-    debugEl.scrollTop = debugEl.scrollHeight
-  }
-
   const usedSlots = document.querySelectorAll(".slot-num-revisions")
-  const slots = [...usedSlots].map(el => el.closest("article"))
-  const fileIds = slots.map(slot => slot.dataset.fileId)
+  const fileIds = Array.from(usedSlots, el => el.closest('article').dataset.fileId)
 
-  const BATCH_SIZE = 15
-  const fileIdBatches = []
-  for (let i = 0; i < fileIds.length; i += BATCH_SIZE) {
-    fileIdBatches.push(fileIds.slice(i, i + BATCH_SIZE))
-  }
+  for (slot of usedSlots)
+    slot.classList.add('throbber')
 
-  usedSlots.forEach(slot => slot.classList.add("throbber"))
+  const BATCH_SIZE = 10
+  for (let i = 0; i < fileIds.length; i += BATCH_SIZE) (async () => { /* captures i */
+    const slice = fileIds.slice(i, i + BATCH_SIZE)
 
-  fileIdBatches.forEach((batch, batch_i) => {
-    LOG("Requesting in bulk:", batch)
-    google.script.run
-      .withSuccessHandler(data => {
-        LOG(`Received results!  # = ${data.length}`)
-        for (let data_i = 0; data_i < data.length; data_i++) {
-          const el_i = batch_i * BATCH_SIZE + data_i
-          const revisionList = data[i]
-          const numRevsEl = usedSlots[el_i]
-          const slotEl = slots[el_i]
+    LOG(`Asking for revisions for ${slice.length} files`)
+    const bulkRevisions = await CALL.getRevisionsInBulk(slice)
 
-          numRevsEl.innerHTML = `<b>${revisionList.length}</b> of ${revisionList.length} revisions`
-          numRevsEl.classList.remove("throbber")
-        }
-      })
-      .withFailureHandler(error => {
-        LOG("!!! ERROR !!!", error)
-      })
-      .getRevisionsInBulk(batch)
-  })
+    LOG(`Yay[${i}-${i + slice.length}]!  # = ${bulkRevisions.length}`)
+    bulkRevisions.forEach((revisions, j) => {
+      const numRevsEl = usedSlots[i + j]
+      numRevsEl.classList.remove('throbber')
+      numRevsEl.innerHTML = `<b>${revisions.length}</b> of ${revisions.length} revisions`
+    })
+  })()
+
 </script>

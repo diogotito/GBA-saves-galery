@@ -1,0 +1,31 @@
+<script defer>
+  const debugEl = document.querySelector("#debug")
+  const LOG = (...args) => {
+    console.log(...args)
+    debugEl.append(
+        "\u00A0\u00A0*\u00A0",
+        ...args.flatMap(arg => (typeof arg !== 'string'
+                                  ? JSON.stringify(arg, null, "›\u00A0\u00A0\u00A0")
+                                  : arg
+                                )
+                                .split('\n')
+                                .flatMap(line => [ line.replaceAll(' ', '\u00A0')
+                                                 , document.createElement('br')
+                                                 , "\u00A0\u00A0\u00A0\u00A0"
+                                                 ]))
+                                .slice(0, -1)
+    )
+    debugEl.scrollTop = debugEl.scrollHeight
+  }
+
+  const CALL = new Proxy({}, {
+    get: (_, fnName) =>
+      (...args) =>
+        new Promise((resolve, reject) =>
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)
+            [fnName](...args)
+        )
+  })
+</script>

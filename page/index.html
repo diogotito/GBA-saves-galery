@@ -9,7 +9,7 @@
   <body>
 
     <aside class="debug">
-      <code id="debug" style="display: block; min-width: 20em; width: 50vw; max-height: calc(100vh - 42px); overflow: auto; border: 1px dotted black; padding: 10px; margin: 10px;">
+      <code id="debug" style="display: none; min-width: 20em; width: 50vw; max-height: calc(100vh - 42px); overflow: auto; border: 1px dotted black; padding: 10px; margin: 10px;">
         Debug output:
           *
 
@@ -124,6 +124,8 @@
 
     </main>
 
+    <?!= include('page/script_utils') ?>
     <?!= include("page/script") ?>
+    
   </body>
 </html>
