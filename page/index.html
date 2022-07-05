@@ -98,7 +98,7 @@
             <!-- Slots from 0 to 9 -->
             <? for (let {slot, fileId, lastSaved, image, numRevisions} of saveStates) { ?>
               <article class="slot slot-<?= slot ?> <?= !lastSaved ? "slot-unused" : "" ?>" data-file-id="<?= fileId ?>">
-                <div class="slot-number">Slot <?= slot || "0 (quick)" ?></div>
+                <div class="slot-number">Slot <?= slot || "0" ?></div>
                 <? if (lastSaved != null) { ?>
                   <div class="slot-num-revisions">
                     <?!= numRevisions > 1 ? `Snapshot <strong>${numRevisions}</strong> of ${numRevisions}` : "" ?>
@@ -112,6 +112,10 @@
                   </div>
                 <? } else { ?>
                   <h3 class="slot-unused-text">Unused</h3>
+                  <div class="slot-saved">
+                    <strong>Last saved:</strong>
+                    N/A
+                  </div>
                 <? } ?>
               </article>
             <? } ?>

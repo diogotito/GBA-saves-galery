@@ -1,4 +1,18 @@
 <style>
+  /*********** TODO ***********
+   
+    [_] tornar o body scrollável
+      [_] main { display: contents }
+      [_] scroll-snap-align nos articles do main
+      [_] scroll-snap-type configurado no body
+      [_] html passa a ser flex para fazer vertical centering do body
+
+    [_] custom scrollbar
+      [_] botão esquerdo pixelizado
+      [X] botão direito pixelizado
+
+   ****************************/
+
   /* Fonts and icons */
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
@@ -54,11 +68,14 @@
     color: var(--foreground-color);
     background-color: var(--background-color);
 
-    margin: var(--thiccness) 0;
+    margin: 0;
+    padding: 0;
 
     display: flex;
-    flex-flow: row nowrap;
-    /* align-items: center; */
+    flex-flow: row;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
   }
 
   h1,h2 {
@@ -78,6 +95,8 @@
     text-align: center;
   }
 
+
+
   /* Games */
 
   main {
@@ -87,10 +106,52 @@
     
     /* Descola o último jogo da direita */
     padding-right: calc(3 * var(--thiccness));
+    padding-bottom: calc(3 * var(--thiccness));
+
+    /* Scroll horizontal com SNAP !! */
+    flex: 1;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+
+    /* Firefox scrollbar */
+    scrollbar-color: var(--foreground-color) var(--background-color);
   }
 
+  /* Chrome scrollbar */
+
+  main::-webkit-scrollbar {
+    height: calc(8 * var(--thiccness));
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAABhJREFUGFdjZGBg+P///38GRhDJyMjIAABL6gf+sH1y0gAAAABJRU5ErkJggg==");
+    background-size: calc(2*var(--thiccness));
+    image-rendering: pixelated;
+  }
+
+  main::-webkit-scrollbar-thumb {
+    background-color: var(--background-color);
+    border: calc(3 * var(--thiccness)) double var(--foreground-color);
+  }
+
+  main::-webkit-scrollbar-button:horizontal:single-button {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    image-rendering: pixelated;
+    width: calc(8 * var(--thiccness));
+  }
+
+  main::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAADhJREFUKFNjZGBg+M+ABzCCFPz/j10NIyMjA4YCkCAIgDShKIBJwCRBNGkKYO7EaQU2j8CtwOdNAGAcJgEW1XNxAAAAAElFTkSuQmCC");
+  }
+
+  main::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAADZJREFUKFNjZGBg+M+ABzCCFPz/j10NIyMjA1wBiAMCyIpRFIAkYYpgCklTQJQV6J6BW4HPmwB4HCYByfYJ4AAAAABJRU5ErkJggg==");
+  }
+
+
+
   article.uh {
-    background-color: #fff;
+    background-color: var(--background-color);
+    scroll-snap-align: center;
   }
 
   .save-states {
@@ -104,10 +165,10 @@
     grid-gap: calc(3 * var(--thiccness));
 
     /* fancy pokemon style double border */
-    border: calc(3 * var(--thiccness)) double #000;
+    border: calc(3 * var(--thiccness)) double var(--foreground-color);
 
-    box-shadow: 0 var(--thiccness) 0 #000
-              , inset 0 var(--thiccness) 0 #000;
+    box-shadow: 0 var(--thiccness) 0 var(--foreground-color)
+              , inset 0 var(--thiccness) 0 var(--foreground-color);
 
     padding:     calc(3 * var(--thiccness));
     padding-top: calc(4 * var(--thiccness));
@@ -146,8 +207,27 @@
   .cartridge-desc {
     grid-area: desc;
     line-height: calc(var(--small-line-height) + 2 * var(--thiccness));
-    max-height: 50px;
+    max-height: 42px;
     overflow: auto;
+    transition: none;
+    padding: 0;
+    border-top:    var(--thiccness) dotted var(--foreground-color);
+    border-bottom: var(--thiccness) dotted var(--foreground-color);
+  }
+
+  .cartridge-save:hover .cartridge-desc {
+    grid-row: 1 / -1;
+    max-height: calc(var(--thumb-height) + 2 * var(--thiccness) + 3px);
+    padding: var(--thiccness);
+    background-color: var(--background-color);
+    z-index: 1;
+    transition: all 0.25s steps(3, start);
+    border: none;
+    box-shadow: calc(-1 * var(--thiccness)) 0 0 var(--foreground-color)
+              , calc( 1 * var(--thiccness)) 0 0 var(--foreground-color)
+              , 0 calc(-1 * var(--thiccness)) 0 var(--foreground-color)
+              , 0 calc( 1 * var(--thiccness)) 0 var(--foreground-color)
+              , 0 0 0 calc(2 * var(--thiccness)) var(--background-color);
   }
 
   ul.ratings {
@@ -162,6 +242,7 @@
     text-align: justify;
     text-justify: inter-word;
     margin-top: calc(2.2 * var(--thiccness));
+    margin-bottom: 0;
     line-height: calc(2.4 * var(--thiccness) + var(--small-line-height));
   }
 
@@ -211,10 +292,10 @@
     width: var(--thumb-width);
     
     /* fancy retro style border */
-    box-shadow: calc(-1 * var(--thiccness)) 0 0 #000
-              , calc( 1 * var(--thiccness)) 0 0 #000
-              , 0 calc(-1 * var(--thiccness)) 0 #000
-              , 0 calc( 1 * var(--thiccness)) 0 #000;
+    box-shadow: calc(-1 * var(--thiccness)) 0 0 var(--foreground-color)
+              , calc( 1 * var(--thiccness)) 0 0 var(--foreground-color)
+              , 0 calc(-1 * var(--thiccness)) 0 var(--foreground-color)
+              , 0 calc( 1 * var(--thiccness)) 0 var(--foreground-color);
     
     margin: var(--thiccness);
 
@@ -248,14 +329,16 @@
   .slot-thumb img {
     image-rendering: pixelated;
     width: var(--thumb-width);
-    transition: transform 0.125s steps(3, end), box-shadow 0.25s steps(5, end) 0.1s;
     box-shadow: 0 0 5px 0 rgb(0 0 0 / 0%), 0 0 0 0 rgb(0 0 0 / 0%);
     cursor: zoom-in;
+    transition: transform 0.0625s steps(3, end) 0.1s, box-shadow 0.125s steps(5, end) 0s;
   }
 
   .slot-thumb:active img {
     box-shadow: 0 0 5px 0 rgb(0 0 0), 0 0 0 15vmax rgb(0 0 0 / 70%);
     transform: scale(4);
+    image-rendering: pixelated;
+    transition: transform 0.125s steps(3, end) 0s, box-shadow 0.125s steps(5, end) 0.1s;
   }
 
   .slot-saved {

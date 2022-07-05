@@ -1,4 +1,7 @@
 <script defer>
+  // -------------------------------------------------------------------------------------
+  // * Fetch number of revisions
+  // -------------------------------------------------------------------------------------
   const usedSlots = document.querySelectorAll(".slot-num-revisions")
   const fileIds = Array.from(usedSlots, el => el.closest('article').dataset.fileId)
 
@@ -19,5 +22,58 @@
       numRevsEl.innerHTML = `<b>${revisions.length}</b> of ${revisions.length} revisions`
     })
   })()
+
+
+  // -------------------------------------------------------------------------------------
+  // * Make the mouse wheel horizontally scroll <main>
+  // -------------------------------------------------------------------------------------
+  const INSTANT_SCROLL_TIMEOUT = 250
+  const mainEl = document.querySelector("main")
+  let lastWheel = 0
+
+  mainEl.addEventListener("wheel", e => {
+    e.preventDefault();
+
+    let scrollBehaviour, scrollMultiplier
+    if (e.timeStamp - lastWheel < INSTANT_SCROLL_TIMEOUT) {
+      scrollBehaviour = "instant"
+      scrollMultiplier = 1.0
+    } else {
+      scrollBehaviour = "smooth"
+      scrollMultiplier = 1.0
+    }
+
+    const scrollDir = Math.sign(e.deltaX) + Math.sign(e.deltaY)
+
+    // Circumvent Firefox quirk
+    mainEl.style.scrollSnapType = ""
+    if (scrollDir > 0 && (mainEl.offsetWidth + mainEl.scrollLeft) >= (mainEl.scrollWidth - 2)) {
+      mainEl.style.scrollSnapType = 'none'
+      setTimeout(() => mainEl.scrollTo({left: mainEl.scrollWidth, top: 0, behavior: 'instant'}), 0)
+      return
+    }
+    if (scrollDir < 0 && mainEl.scrollLeft <= 2) {
+      mainEl.style.scrollSnapType = 'none'
+      setTimeout(() => mainEl.scrollTo({left: 0, top: 0, behavior: 'instant'}), 0)
+      return
+    }
+
+    const gameWidth = [...mainEl.children]
+      .slice(0, 2)
+      .map(game => game.getBoundingClientRect().x)
+      .reduce((x1, x2) => x2 - x1)
+    
+    const scrollAmount = gameWidth * scrollDir * scrollMultiplier
+    
+    console.log({scrollAmount: Math.floor(scrollAmount), scrollBehaviour})
+
+    mainEl.scrollBy({
+      top: 0,
+      left: scrollAmount,
+      behavior: scrollBehaviour
+    })
+
+    lastWheel = e.timeStamp
+  })
 
 </script>
