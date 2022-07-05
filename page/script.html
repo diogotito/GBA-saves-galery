@@ -45,19 +45,6 @@
 
     const scrollDir = Math.sign(e.deltaX) + Math.sign(e.deltaY)
 
-    // Circumvent Firefox quirk
-    mainEl.style.scrollSnapType = ""
-    if (scrollDir > 0 && (mainEl.offsetWidth + mainEl.scrollLeft) >= (mainEl.scrollWidth - 2)) {
-      mainEl.style.scrollSnapType = 'none'
-      setTimeout(() => mainEl.scrollTo({left: mainEl.scrollWidth, top: 0, behavior: 'instant'}), 0)
-      return
-    }
-    if (scrollDir < 0 && mainEl.scrollLeft <= 2) {
-      mainEl.style.scrollSnapType = 'none'
-      setTimeout(() => mainEl.scrollTo({left: 0, top: 0, behavior: 'instant'}), 0)
-      return
-    }
-
     const gameWidth = [...mainEl.children]
       .slice(0, 2)
       .map(game => game.getBoundingClientRect().x)
@@ -75,5 +62,41 @@
 
     lastWheel = e.timeStamp
   })
+
+
+  let lastScroll = 0;
+
+  mainEl.addEventListener("scroll", e => {
+    const MARGIN = 50
+    const nearStart = mainEl.scrollLeft < MARGIN
+    const nearEnd = (mainEl.offsetWidth + mainEl.scrollLeft) >= (mainEl.scrollWidth - MARGIN)
+    
+    const firstScrollInAWhile = (e.timeStamp - lastScroll) > 100
+    lastScroll = e.timeStamp
+
+    console.log({nearStart, nearEnd, firstScrollInAWhile})
+
+    const preventSnap = firstScrollInAWhile && (nearStart || nearEnd)
+    mainEl.style.scrollSnapType = preventSnap ? "none" : ""    
+  }, {
+    passive: true
+  })
+
+  /* (previously on wheel)
+  
+      // Circumvent Firefox quirk
+    mainEl.style.scrollSnapType = ""
+    if (scrollDir > 0 && (mainEl.offsetWidth + mainEl.scrollLeft) >= (mainEl.scrollWidth - 2)) {
+      mainEl.style.scrollSnapType = 'none'
+      setTimeout(() => mainEl.scrollTo({left: mainEl.scrollWidth, top: 0, behavior: 'instant'}), 10)
+      return
+    }
+    if (scrollDir < 0 && mainEl.scrollLeft <= 2) {
+      mainEl.style.scrollSnapType = 'none'
+      setTimeout(() => mainEl.scrollTo({left: 0, top: 0, behavior: 'instant'}), 10)
+      return
+    }
+  */
+
 
 </script>
