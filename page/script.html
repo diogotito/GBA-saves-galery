@@ -1,4 +1,4 @@
-<script defer>
+<script type="module">
   // -------------------------------------------------------------------------------------
   // * Fetch number of revisions
   // -------------------------------------------------------------------------------------
@@ -7,7 +7,7 @@
                              el => el.closest('article')
                                      .dataset['fileId'])
 
-  for (slot of usedSlots)
+  for (const slot of usedSlots)
     slot.classList.add('throbber')
 
   const BATCH_SIZE = 10

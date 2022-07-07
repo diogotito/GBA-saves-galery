@@ -1,4 +1,4 @@
-<script defer>
+<script type="module">
   const debugEl = document.querySelector("#debug")
   
   debugEl.style.display = "none";  // Comment to show
@@ -30,5 +30,10 @@
             .withFailureHandler(reject)
             [fnName](...args)
         )
+  })
+
+  Object.assign(globalThis, {
+    LOG,
+    CALL
   })
 </script>
