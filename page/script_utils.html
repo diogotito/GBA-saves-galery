@@ -1,5 +1,8 @@
 <script defer>
   const debugEl = document.querySelector("#debug")
+  
+  debugEl.style.display = "none";  // Comment to show
+  
   const LOG = (...args) => {
     console.log(...args)
     debugEl.append(

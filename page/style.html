@@ -7,10 +7,6 @@
       [_] scroll-snap-type configurado no body
       [_] html passa a ser flex para fazer vertical centering do body
 
-    [_] custom scrollbar
-      [_] botão esquerdo pixelizado
-      [X] botão direito pixelizado
-
    ****************************/
 
   /* Fonts and icons */
@@ -63,20 +59,32 @@
 
   /* Style */
 
+  html {
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+
+    /* Scroll horizontal com SNAP !! */
+    scroll-snap-type: x mandatory;
+    scroll-padding: calc(6 * var(--thiccness));
+  }
+
   body {
     font-family: 'VT323', monospace;
     color: var(--foreground-color);
     background-color: var(--background-color);
 
     margin: 0;
-    padding: 0;
+    padding-right: calc(6 * var(--thiccness));
 
     display: flex;
-    flex-flow: row;
+    flex-flow: row nowrap;
+    gap: calc(6 * var(--thiccness));
     align-items: center;
-    width: 100vw;
-    height: 100vh;
   }
+
+  main { display: contents; }
 
   h1,h2 {
     font-family: 'Press Start 2P', cursive;
@@ -84,7 +92,6 @@
   }
 
   body > header {
-    margin: 0 1em 0 2em;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
   }
@@ -96,42 +103,29 @@
   }
 
 
+  /* Firefox scrollbar */
 
-  /* Games */
-
-  main {
-    display: flex;
-    flex-flow: row nowrap;
-    gap: calc(6 * var(--thiccness));
-    
-    /* Descola o último jogo da direita */
-    padding-right: calc(3 * var(--thiccness));
-    padding-bottom: calc(3 * var(--thiccness));
-
-    /* Scroll horizontal com SNAP !! */
-    flex: 1;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-
-    /* Firefox scrollbar */
+  html, html * {
     scrollbar-color: var(--foreground-color) var(--background-color);
+    scrollbar-width: thin;
   }
 
   /* Chrome scrollbar */
 
-  main::-webkit-scrollbar {
+  ::-webkit-scrollbar {
     height: calc(8 * var(--thiccness));
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAABhJREFUGFdjZGBg+P///38GRhDJyMjIAABL6gf+sH1y0gAAAABJRU5ErkJggg==");
-    background-size: calc(2*var(--thiccness));
+    background-size: calc(2 * var(--thiccness));
     image-rendering: pixelated;
   }
 
-  main::-webkit-scrollbar-thumb {
+  ::-webkit-scrollbar-thumb {
     background-color: var(--background-color);
-    border: calc(3 * var(--thiccness)) double var(--foreground-color);
+    border: var(--thiccness) solid var(--foreground-color);
+    box-shadow: inset 0 calc(-1 * var(--thiccness)) 0 0 var(--foreground-color);
   }
 
-  main::-webkit-scrollbar-button:horizontal:single-button {
+  ::-webkit-scrollbar-button:horizontal:single-button {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -139,19 +133,20 @@
     width: calc(8 * var(--thiccness));
   }
 
-  main::-webkit-scrollbar-button:single-button:horizontal:decrement {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAADhJREFUKFNjZGBg+M+ABzCCFPz/j10NIyMjA4YCkCAIgDShKIBJwCRBNGkKYO7EaQU2j8CtwOdNAGAcJgEW1XNxAAAAAElFTkSuQmCC");
+  ::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAADVJREFUKFNjZGBg+M+ABzCCFPz/j10NIyMjA4YCkCAIgDShKECWgNlImgnY3Ak3gaAv8CkAANEWIAGBaR+oAAAAAElFTkSuQmCC");
   }
 
-  main::-webkit-scrollbar-button:single-button:horizontal:increment {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAADZJREFUKFNjZGBg+M+ABzCCFPz/j10NIyMjA1wBiAMCyIpRFIAkYYpgCklTQJQV6J6BW4HPmwB4HCYByfYJ4AAAAABJRU5ErkJggg==");
+  ::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAADVJREFUKFNjZGBg+M+ABzCCFPz/j10NIyMjA1wBiAMCyIpRFMBsQVZIngnI7oWbQNAX+BQAAOkWIAFJ6RO1AAAAAElFTkSuQmCC");
   }
 
-
+  .snap-target {
+    scroll-snap-align: start;
+  }
 
   article.uh {
     background-color: var(--background-color);
-    scroll-snap-align: center;
   }
 
   .save-states {
