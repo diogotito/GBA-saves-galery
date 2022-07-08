@@ -43,20 +43,42 @@
         return false
       }
       const overflowY = getComputedStyle(element).overflowY
+      const doesCSSOverflow = ['overflow', 'auto'].includes(overflowY)
       const isOverflowing = element.scrollHeight > element.clientHeight
-      return ['overflow', 'auto'].includes(overflowY) && isOverflowing
+      return doesCSSOverflow && isOverflowing
+    }
+
+    static ignoreEvent(event) {
+      if (event.shiftKey) {
+        return true
+      }
+      if (event.composedPath().some(WheelHandler.isScrollable)) {
+        return true
+      }
+      return false
+    }
+
+    updateTimeStamp(ts) {
+      const dt = this.#lastTimeStamp - ts
+      this.#lastTimeStamp = ts
+      return dt
     }
 
     handleEvent(event) {
-      if (event.shiftKey) return
-      if (event.composedPath()
-               .some(WheelHandler.isScrollable)) return
+      if (WheelHandler.ignoreEvent(event)) {
+        return
+      }
+
+      const scrollAmount = Math.sign(event.deltaY) * WheelHandler.GAME_WIDTH
+
+      const dt = this.updateTimeStamp(event.timeStamp)
+      const behavior = dt < WheelHandler.INSTANT_SCROLL_MS
+                     ? "instant"
+                     : "smooth"
 
       document.documentElement.scrollBy({
-        left: Math.sign(event.deltaY) * WheelHandler.GAME_WIDTH,
-        behavior: event.timeStamp - this.#lastTimeStamp < WheelHandler.INSTANT_SCROLL_MS
-                    ? "instant"
-                    : "smooth",
+        left: scrollAmount,
+        behavior
       })
 
       this.#lastTimeStamp = event.timeStamp
