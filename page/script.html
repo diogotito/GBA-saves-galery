@@ -33,14 +33,21 @@
   // -------------------------------------------------------------------------------------
   const gameWidth = document.querySelector("article.uh").offsetWidth
 
-  const INSTANT_SCROLL_TIMEOUT = 250
+  const INSTANT_SCROLL_TIMEOUT = 400
   let lastWheelTimeStamp = 0
 
   window.addEventListener("wheel", (e) => {
-    const anyScrollable = e.composedPath()
-                           .some($el => $el.classList?.contains("overflow-auto"))
+    // Test if the wheel is scrolling some overflowing container
+    // that has an overflow-y CSS property
+    const overAnyScrollable = e.composedPath()
+        .filter(node => node.nodeType === Node.ELEMENT_NODE)
+        .some(element => {
+           const overflowY = getComputedStyle(element).overflowY
+           const isOverflowing = element.scrollHeight > element.clientHeight
+           return ['overflow', 'auto'].includes(overflowY) && isOverflowing
+         })
 
-    if (anyScrollable || e.shiftKey) {
+    if (overAnyScrollable || e.shiftKey) {
       return
     }
 
