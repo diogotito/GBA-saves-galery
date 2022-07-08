@@ -36,9 +36,16 @@
   const INSTANT_SCROLL_TIMEOUT = 250
   let lastWheelTimeStamp = 0
 
-  addEventListener("wheel", (e) => {
+  window.addEventListener("wheel", (e) => {
+    const anyScrollable = e.composedPath()
+                           .some($el => $el.classList?.contains("overflow-auto"))
+
+    if (anyScrollable || e.shiftKey) {
+      return
+    }
+
     document.documentElement.scrollBy({
-      left: Math.sign(e.deltaX + e.deltaY) * gameWidth,
+      left: Math.sign(e.deltaY) * gameWidth,
       behavior: (e.timeStamp - lastWheelTimeStamp < INSTANT_SCROLL_TIMEOUT)
                   ? "instant"
                   : "smooth"

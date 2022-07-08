@@ -33,11 +33,24 @@
     --slot-bg: #ccc;
   }
 
+  /* Utility (atomic?) classes */
+
+  .overflow-auto {
+    /* Appears in .cartridge-save h2 and .cartridge-desc */
+    overflow: auto;
+  }
+
   
-  /* general */
+  /* CRISPNESS */
 
   svg {
     shape-rendering: crispEdges;
+  }
+
+  html {
+    image-rendering: pixelated;
+    font-smooth: none;
+    -webkit-font-smoothing: none;
   }
 
   
@@ -196,14 +209,12 @@
     margin: 0;
     line-height: calc(var(--big-line-height) + var(--thiccness));
     max-height: calc(16 * var(--thiccness));
-    overflow: auto;
   }
 
   .cartridge-desc {
     grid-area: desc;
     line-height: calc(var(--small-line-height) + 2 * var(--thiccness));
     max-height: 42px;
-    overflow: auto;
     transition: none;
     padding: 0;
     border-top:    var(--thiccness) dotted var(--foreground-color);
