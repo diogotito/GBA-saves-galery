@@ -1,0 +1,27 @@
+{
+  "name": "gdrive-gba-gallery",
+  "version": "0.0.25",
+  "description": "A Google Apps Script Web App that fetches save states, thumbnails and cartridge saves from MyBoy! backups in Google Drive and renders them in a web page that features a 1-bit retro aesthetic",
+  "main": "WebApp.js",
+  "scripts": {
+    "test": "./sync.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diogotito/GBA-saves-galery.git"
+  },
+  "keywords": [
+    "gdrive",
+    "Google Apps Script"
+  ],
+  "author": "Diogo Tito Marques",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/diogotito/GBA-saves-galery/issues"
+  },
+  "homepage": "https://github.com/diogotito/GBA-saves-galery#readme",
+  "devDependencies": {
+    "@google/clasp": "^2.4.1",
+    "@types/google-apps-script": "^1.0.51"
+  }
+}

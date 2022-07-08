@@ -82,3 +82,4 @@ tags
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,visualstudiocode,sublimetext
+node_modules
