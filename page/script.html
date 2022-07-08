@@ -4,8 +4,8 @@
   // -------------------------------------------------------------------------------------
   const usedSlots = document.querySelectorAll(".slot-num-revisions")
   const fileIds = Array.from(usedSlots,
-                             el => el.closest('article')
-                                     .dataset['fileId'])
+    el => el.closest('article')
+      .dataset['fileId'])
 
   for (const slot of usedSlots)
     slot.classList.add('throbber')
@@ -31,33 +31,38 @@
   // -------------------------------------------------------------------------------------
   // * Make the mouse wheel horizontally scroll <main>
   // -------------------------------------------------------------------------------------
-  const gameWidth = document.querySelector("article.uh").offsetWidth
 
-  const INSTANT_SCROLL_TIMEOUT = 400
-  let lastWheelTimeStamp = 0
 
-  window.addEventListener("wheel", (e) => {
-    // Test if the wheel is scrolling some overflowing container
-    // that has an overflow-y CSS property
-    const overAnyScrollable = e.composedPath()
-        .filter(node => node.nodeType === Node.ELEMENT_NODE)
-        .some(element => {
-           const overflowY = getComputedStyle(element).overflowY
-           const isOverflowing = element.scrollHeight > element.clientHeight
-           return ['overflow', 'auto'].includes(overflowY) && isOverflowing
-         })
+  class WheelHandler {
+    static GAME_WIDTH = document.querySelector("article.uh").offsetWidth
+    static INSTANT_SCROLL_MS = 400
+    #lastTimeStamp = 0
 
-    if (overAnyScrollable || e.shiftKey) {
-      return
+    static isScrollable(node) {
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return false
+      }
+      const overflowY = getComputedStyle(element).overflowY
+      const isOverflowing = element.scrollHeight > element.clientHeight
+      return ['overflow', 'auto'].includes(overflowY) && isOverflowing
     }
 
-    document.documentElement.scrollBy({
-      left: Math.sign(e.deltaY) * gameWidth,
-      behavior: (e.timeStamp - lastWheelTimeStamp < INSTANT_SCROLL_TIMEOUT)
-                  ? "instant"
-                  : "smooth"
-    })
-    lastWheelTimeStamp = e.timeStamp
-  }, {passive: true})
+    handleEvent(event) {
+      if (event.shiftKey) return
+      if (event.composedPath()
+               .some(WheelHandler.isScrollable)) return
+
+      document.documentElement.scrollBy({
+        left: Math.sign(event.deltaY) * WheelHandler.GAME_WIDTH,
+        behavior: event.timeStamp - this.#lastTimeStamp < WheelHandler.INSTANT_SCROLL_MS
+                    ? "instant"
+                    : "smooth",
+      })
+
+      this.#lastTimeStamp = event.timeStamp
+    }
+  }
+
+  window.addEventListener("wheel", new WheelHandler(), { passive: true })
 
 </script>
