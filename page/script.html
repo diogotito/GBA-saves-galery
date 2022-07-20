@@ -69,16 +69,11 @@
         return
       }
 
-      const scrollAmount = Math.sign(event.deltaY) * WheelHandler.GAME_WIDTH
-
       const dt = this.updateTimeStamp(event.timeStamp)
-      const behavior = dt < WheelHandler.INSTANT_SCROLL_MS
-                     ? "instant"
-                     : "smooth"
 
       document.documentElement.scrollBy({
-        left: scrollAmount,
-        behavior
+        left: Math.sign(event.deltaY) * WheelHandler.GAME_WIDTH,
+        behavior: dt < WheelHandler.INSTANT_SCROLL_MS ? "instant" : "smooth"
       })
 
       this.#lastTimeStamp = event.timeStamp
