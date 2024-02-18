@@ -4,7 +4,8 @@
   "description": "A Google Apps Script Web App that fetches save states, thumbnails and cartridge saves from MyBoy! backups in Google Drive and renders them in a web page that features a 1-bit retro aesthetic",
   "main": "WebApp.js",
   "scripts": {
-    "test": "./sync.sh"
+    "test": "./sync.sh",
+    "sync": "clasp pull && git add . && git commit"
   },
   "repository": {
     "type": "git",
